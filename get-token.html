@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProfileQuest // GET TOKEN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function(){
+            document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+            document.addEventListener('keydown', function(e){
+                if(e.key === 'F12') { e.preventDefault(); return false; }
+                if(e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)){ e.preventDefault(); return false; }
+                if(e.ctrlKey && ['U','u'].includes(e.key)){ e.preventDefault(); return false; }
+                if(e.ctrlKey && ['S','s'].includes(e.key)){ e.preventDefault(); return false; }
+            });
+            var threshold = 160;
+            var devtoolsOpen = false;
+            setInterval(function(){
+                var widthDiff  = window.outerWidth  - window.innerWidth  > threshold;
+                var heightDiff = window.outerHeight - window.innerHeight > threshold;
+                if((widthDiff || heightDiff) && !devtoolsOpen){
+                    devtoolsOpen = true;
+                    document.body.innerHTML = '';
+                    document.body.style.background = '#060810';
+                }
+            }, 500);
+            setInterval(function(){
+                (function(){ return false; }['constructor']('debugger')['call']());
+            }, 3000);
+        })();
+    </script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #e2e8f0;
+            padding: 24px;
+            gap: 28px;
+            background: #060810;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%; left: -10%;
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -20%; right: -10%;
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+
+        .header {
+            position: relative; z-index: 1;
+            display: flex; align-items: center;
+            justify-content: center; gap: 18px;
+        }
+
+        .header-orb {
+            width: 72px; height: 72px;
+            object-fit: contain;
+            animation: levitate 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 18px rgba(108,99,255,0.55));
+            flex-shrink: 0;
+        }
+
+        @keyframes levitate {
+            0%   { transform: translateY(0px); }
+            50%  { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .header-text { text-align: left; }
+
+        .header h1 {
+            font-size: 2.4rem; font-weight: 700;
+            color: #fff; letter-spacing: -1px; line-height: 1;
+        }
+
+        .header h1 span {
+            background: linear-gradient(135deg, #6c63ff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #475569; font-size: 0.82rem;
+            margin-top: 6px; letter-spacing: 0.2px;
+        }
+
+        .card {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 480px;
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 28px 32px;
+            box-shadow:
+                0 0 0 1px rgba(108,99,255,0.08),
+                0 32px 80px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 20px 14px 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.03);
+            color: #64748b;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            transition: background 0.25s, border-color 0.25s, color 0.25s, box-shadow 0.25s, transform 0.18s;
+            text-decoration: none;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-action::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(108,99,255,0.08) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.25s;
+            border-radius: inherit;
+        }
+
+        .btn-action:hover::before { opacity: 1; }
+
+        .btn-action:hover {
+            border-color: rgba(108,99,255,0.3);
+            color: #a78bfa;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(108,99,255,0.15);
+        }
+
+        .btn-action:active { transform: translateY(0); }
+
+        .btn-action.copied {
+            border-color: rgba(74,222,128,0.25);
+            color: #4ade80;
+            box-shadow: 0 10px 30px rgba(74,222,128,0.1);
+        }
+
+        .btn-action.copied::before {
+            background: linear-gradient(135deg, rgba(74,222,128,0.06) 0%, transparent 60%);
+            opacity: 1;
+        }
+
+        .btn-action-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: rgba(108,99,255,0.1);
+            border: 1px solid rgba(108,99,255,0.15);
+            transition: background 0.25s, border-color 0.25s;
+            flex-shrink: 0;
+        }
+
+        .btn-action:hover .btn-action-icon {
+            background: rgba(108,99,255,0.18);
+            border-color: rgba(108,99,255,0.3);
+        }
+
+        .btn-action.copied .btn-action-icon {
+            background: rgba(74,222,128,0.1);
+            border-color: rgba(74,222,128,0.2);
+        }
+
+        .btn-action-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: #6c63ff;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.25s;
+        }
+
+        .btn-action:hover .btn-action-icon svg { stroke: #a78bfa; }
+        .btn-action.copied .btn-action-icon svg { stroke: #4ade80; }
+
+        #bm-link {
+            -webkit-user-drag: element !important;
+            cursor: grab;
+        }
+
+        #bm-link:active { cursor: grabbing; }
+
+        .btn-action-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            line-height: 1.3;
+        }
+
+        .btn-sub {
+            display: block;
+            font-size: 0.68rem;
+            font-weight: 400;
+            opacity: 0.45;
+            margin-top: 2px;
+        }
+
+        .warning-box {
+            display: flex; gap: 10px; align-items: flex-start;
+            background: rgba(234,179,8,0.05);
+            border: 1px solid rgba(234,179,8,0.12);
+            border-radius: 10px; padding: 11px 14px;
+            font-size: 0.74rem; color: #78600a;
+            line-height: 1.5;
+        }
+
+        .warning-box::before { content: '⚠'; flex-shrink: 0; color: #a16207; }
+
+        .toast {
+            position: fixed; bottom: 28px; left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: rgba(26,29,39,0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(74,222,128,0.3);
+            color: #4ade80; padding: 10px 22px;
+            border-radius: 10px; font-size: 0.78rem; font-weight: 500;
+            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            pointer-events: none; white-space: nowrap; z-index: 100;
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="orbs.png" class="header-orb" alt="orb">
+        <div class="header-text">
+            <h1>Profile<span>Quest</span></h1>
+            <p>Obter token do Discord</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="action-row">
+            <a class="btn-action" id="bm-link" href="#" draggable="true">
+                <span class="btn-action-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8M12 17v4"/>
+                        <path d="M12 7v6M9 10l3-3 3 3"/>
+                    </svg>
+                </span>
+                <span class="btn-action-label">Arrastar e soltar
+                    <span class="btn-sub">PC</span>
+                </span>
+            </a>
+            <button class="btn-action" id="btn-copy">
+                <span class="btn-action-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="9" y="9" width="13" height="13" rx="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </span>
+                <span class="btn-action-label">Copiar
+                    <span class="btn-sub">Celular</span>
+                </span>
+            </button>
+        </div>
+
+        <div class="warning-box">
+            Nunca partilhes o teu token. Dá acesso total à tua conta Discord.
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        var BM = "javascript:(function(){var uid='pq'+Date.now();function rm(){var e=document.getElementById(uid);if(e)e.remove();}var token=null;try{var f=document.createElement('iframe');f.style.display='none';document.body.appendChild(f);try{token=JSON.parse(f.contentWindow.localStorage.token||'null');}catch(x){}f.remove();}catch(x){}if(!token){try{var req;window.webpackChunkdiscord_app.push([[Symbol()],{},function(r){req=r;}]);Object.values(req.c).forEach(function(m){if(token||!m||!m.exports)return;[m.exports,m.exports.default,m.exports.Z,m.exports.ZP].forEach(function(x){if(token||!x||typeof x.getToken!=='function')return;try{var t=x.getToken();if(t&&t.length>20)token=t;}catch(x){}});});}catch(x){}}var wrap=document.createElement('div');wrap.id=uid;wrap.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;';if(!token){wrap.innerHTML='<div style=\"background:#1e1f22;border:1px solid #ed4245;border-radius:12px;padding:28px 32px;max-width:380px;width:90%;text-align:center;\"><p style=\"color:#ed4245;font-weight:700;font-size:15px;margin-bottom:8px;\">Token n\u00e3o encontrado</p><p style=\"color:#949ba4;font-size:13px;margin-bottom:20px;\">Certifica-te de estar em <b>discord.com/app</b> e logado.</p><button id=\"'+uid+'c\" style=\"background:#2b2d31;border:1px solid #3f4147;color:#dbdee1;padding:9px 24px;border-radius:6px;cursor:pointer;font-size:14px;font-weight:600;\">Fechar</button></div>';document.body.appendChild(wrap);document.getElementById(uid+'c').addEventListener('click',rm);wrap.addEventListener('click',function(e){if(e.target===wrap)rm();});return;}wrap.innerHTML='<div style=\"background:#1e1f22;border:1px solid #3f4147;border-radius:12px;padding:28px 32px;max-width:460px;width:90%;\"><p style=\"color:#23a55a;font-weight:700;font-size:14px;margin-bottom:12px;\">\u2713 Token encontrado</p><div style=\"background:#111214;border:1px solid #2b2d31;border-radius:6px;padding:10px 12px;font-size:11px;word-break:break-all;color:#b5bac1;font-family:monospace;line-height:1.6;margin-bottom:16px;max-height:80px;overflow-y:auto;\">'+token+'</div><div style=\"display:flex;gap:8px;\"><button id=\"'+uid+'p\" style=\"flex:1;background:#5865f2;border:none;color:#fff;padding:10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:14px;\">Copiar Token</button><button id=\"'+uid+'c\" style=\"background:#2b2d31;border:1px solid #3f4147;color:#dbdee1;padding:10px 16px;border-radius:6px;cursor:pointer;font-size:18px;line-height:1;\">\u00d7</button></div></div>';document.body.appendChild(wrap);document.getElementById(uid+'c').addEventListener('click',rm);wrap.addEventListener('click',function(e){if(e.target===wrap)rm();});document.getElementById(uid+'p').addEventListener('click',function(){navigator.clipboard.writeText(token).then(function(){var b=document.getElementById(uid+'p');if(b){b.textContent='\u2713 Copiado!';b.style.background='#23a55a';}}).catch(function(){prompt('Copia o token:',token);});});})()";
+
+        var bmLink = document.getElementById('bm-link');
+        bmLink.href = BM;
+        bmLink.addEventListener('click', function(e){ e.preventDefault(); });
+        bmLink.addEventListener('dragstart', function(e){
+            e.dataTransfer.setData('text/uri-list', BM);
+            e.dataTransfer.setData('text/plain', BM);
+            e.dataTransfer.effectAllowed = 'copy';
+            var ghost = document.createElement('div');
+            ghost.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;';
+            document.body.appendChild(ghost);
+            e.dataTransfer.setDragImage(ghost, 0, 0);
+            setTimeout(function(){ document.body.removeChild(ghost); }, 0);
+        });
+
+        function showToast(msg) {
+            var t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(function(){ t.classList.remove('show'); }, 2500);
+        }
+
+        document.getElementById('btn-copy').addEventListener('click', function() {
+            var self = this;
+            navigator.clipboard.writeText(BM).then(function() {
+                self.querySelector('.btn-action-icon').innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+                self.querySelector('.btn-action-label').innerHTML = 'Copiado! <span class="btn-sub">Celular</span>';
+                self.classList.add('copied');
+                showToast('Bookmarklet copiado!');
+                setTimeout(function() {
+                    self.querySelector('.btn-action-icon').innerHTML = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+                    self.querySelector('.btn-action-label').innerHTML = 'Copiar <span class="btn-sub">Celular</span>';
+                    self.classList.remove('copied');
+                }, 2000);
+            }).catch(function() { showToast('Erro ao copiar.'); });
+        });
+    </script>
+</body>
+</html>
