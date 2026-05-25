@@ -6,7 +6,6 @@
     <title>ProfileQuest // GET TOKEN</title>
     <meta name="description" content="Profilequest // GET TOKEN um sistema para acessar seu token e logar no nosso bot para concluir: Missões, conseguir orbs de um jeito rápido e pratico.">
     <meta name="theme-color" content="#3f3f46">
-
     <meta property="og:type" content="website">
     <meta property="og:title" content="ProfileQuest // GET TOKEN">
     <meta property="og:description" content="Profilequest // GET TOKEN um sistema para acessar seu token e logar no nosso bot para concluir: Missões, conseguir orbs de um jeito rápido e pratico.">
@@ -14,16 +13,41 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="ProfileQuest">
-
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="ProfileQuest // GET TOKEN">
     <meta name="twitter:description" content="Profilequest // GET TOKEN um sistema para acessar seu token e logar no nosso bot para concluir: Missões, conseguir orbs de um jeito rápido e pratico.">
     <meta name="twitter:image" content="/profilequest_banner.png">
-
-    <link rel="icon" href="/orbs.png">
-    <link rel="stylesheet" href="/assets/index-lkajdfjlkj.css">
+    <link rel="icon" href="orbs.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/index-lkajdfjlkj.css">
+    <script src="assets/index-oqiweori.js"></script>
 </head>
 <body>
-    <script src="/assets/index-oqiweori.js"></script>
+    <div class="noise"></div>
+    <div class="header">
+        <img src="orbs.png" class="header-orb" alt="orb">
+        <div class="header-text">
+            <h1>Profile<span>Quest</span></h1>
+            <p>Obter token do Discord</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="action-row">
+            <a class="btn-action" id="bm-link" href="#" draggable="true">
+                <span class="btn-action-icon">
+                    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M12 7v6M9 10l3-3 3 3"/></svg>
+                </span>
+                <span class="btn-action-label">Arrastar e soltar<span class="btn-sub">PC</span></span>
+            </a>
+            <button class="btn-action" id="btn-copy">
+                <span class="btn-action-icon">
+                    <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </span>
+                <span class="btn-action-label">Copiar<span class="btn-sub">Celular</span></span>
+            </button>
+        </div>
+        <div class="warning-box">Nunca compartilhe o teu token. Dá acesso total à tua conta Discord.</div>
+    </div>
+    <div class="toast" id="toast"></div>
 </body>
 </html>
