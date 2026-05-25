@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProfileQuest - Sistema de Missões Automáticas</title>
+    <title>ProfileQuest // GET TOKEN</title>
     <meta name="description" content="Sistema automático de quests para Discord. Missões, recompensas e progressão de usuários totalmente automatizada.">
     <meta name="theme-color" content="#6c63ff">
-
     <meta property="og:type" content="website">
     <meta property="og:title" content="ProfileQuest - Sistema de Missões Automáticas">
     <meta property="og:description" content="Sistema automático de quests para Discord. Missões, recompensas e progressão de usuários totalmente automatizada.">
@@ -14,16 +13,337 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="ProfileQuest">
-
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ProfileQuest - Sistema de Missões Automáticas">
-    <meta name="twitter:description" content="Sistema automático de quests para Discord. Missões, recompensas e progressão de usuários totalmente automatizada.">
-    <meta name="twitter:image" content="/profilequest.png">
-
+    <meta name="twitter:title" content="ProfileQuest // GET TOKEN">
+    <meta name="twitter:description" content="Sistema automático de tokens para Discord. Para logar no nosso bot de AutoQuest que completa: Missões, recompensas e progressão de usuários totalmente de forma rápida e simples.">
+    <meta name="twitter:image" content="/profilequest_banner.png">
     <link rel="icon" href="/orbs.png">
-    <link rel="stylesheet" href="/assets/index-lkajdfjlkj.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function(){
+            document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+            document.addEventListener('keydown', function(e){
+                if(e.key === 'F12') { e.preventDefault(); return false; }
+                if(e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)){ e.preventDefault(); return false; }
+                if(e.ctrlKey && ['U','u'].includes(e.key)){ e.preventDefault(); return false; }
+                if(e.ctrlKey && ['S','s'].includes(e.key)){ e.preventDefault(); return false; }
+            });
+            var threshold = 160;
+            var devtoolsOpen = false;
+            setInterval(function(){
+                var widthDiff  = window.outerWidth  - window.innerWidth  > threshold;
+                var heightDiff = window.outerHeight - window.innerHeight > threshold;
+                if((widthDiff || heightDiff) && !devtoolsOpen){
+                    devtoolsOpen = true;
+                    document.body.innerHTML = '';
+                    document.body.style.background = '#060810';
+                }
+            }, 500);
+            setInterval(function(){
+                (function(){ return false; }['constructor']('debugger')['call']());
+            }, 3000);
+        })();
+    </script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #e4e4e7;
+            padding: 24px;
+            gap: 32px;
+            background: #09090b;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(63,63,70,0.15) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+
+        .noise {
+            position: fixed; inset: 0; z-index: 0;
+            opacity: 0.025; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .header {
+            position: relative; z-index: 1;
+            display: flex; align-items: center;
+            justify-content: center; gap: 16px;
+        }
+
+        .header-orb {
+            width: 64px; height: 64px;
+            object-fit: contain;
+            animation: levitate 4s ease-in-out infinite;
+            filter: grayscale(0.3) drop-shadow(0 0 20px rgba(161,161,170,0.2));
+            flex-shrink: 0;
+        }
+
+        @keyframes levitate {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .header-text { text-align: left; }
+
+        .header h1 {
+            font-size: 2.2rem; font-weight: 700;
+            color: #fafafa; letter-spacing: -0.8px; line-height: 1;
+        }
+
+        .header h1 span {
+            color: #71717a;
+            font-weight: 500;
+        }
+
+        .header p {
+            color: #52525b; font-size: 0.8rem;
+            margin-top: 5px; letter-spacing: 0.3px;
+            font-weight: 400;
+        }
+
+        .card {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 440px;
+            background: linear-gradient(180deg, #18181b 0%, #111113 100%);
+            border: 1px solid #27272a;
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow:
+                0 1px 0 0 rgba(255,255,255,0.03) inset,
+                0 20px 50px -12px rgba(0,0,0,0.8);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 18px 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #27272a;
+            background: #09090b;
+            color: #71717a;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+            position: relative;
+        }
+
+        .btn-action:hover {
+            border-color: #3f3f46;
+            color: #e4e4e7;
+            background: #18181b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .btn-action:active { transform: translateY(0); box-shadow: none; }
+
+        .btn-action.copied {
+            border-color: #166534;
+            color: #4ade80;
+            background: #09090b;
+        }
+
+        .btn-action-icon {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: #18181b;
+            border: 1px solid #27272a;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover .btn-action-icon {
+            background: #27272a;
+            border-color: #3f3f46;
+        }
+
+        .btn-action.copied .btn-action-icon {
+            background: rgba(74,222,128,0.06);
+            border-color: #166534;
+        }
+
+        .btn-action-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #52525b;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.2s;
+        }
+
+        .btn-action:hover .btn-action-icon svg { stroke: #a1a1aa; }
+        .btn-action.copied .btn-action-icon svg { stroke: #4ade80; }
+
+        #bm-link {
+            -webkit-user-drag: element !important;
+            cursor: grab;
+        }
+
+        #bm-link:active { cursor: grabbing; }
+
+        .btn-action-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            line-height: 1.3;
+        }
+
+        .btn-sub {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: #3f3f46;
+            margin-top: 2px;
+        }
+
+        .warning-box {
+            display: flex; gap: 8px; align-items: center;
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 8px; padding: 10px 12px;
+            font-size: 0.72rem; color: #52525b;
+            line-height: 1.4;
+        }
+
+        .warning-box::before { content: '⚠'; flex-shrink: 0; color: #71717a; font-size: 0.8rem; }
+
+        .toast {
+            position: fixed; bottom: 28px; left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #18181b;
+            border: 1px solid #27272a;
+            color: #4ade80; padding: 10px 20px;
+            border-radius: 8px; font-size: 0.76rem; font-weight: 500;
+            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            pointer-events: none; white-space: nowrap; z-index: 100;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
 </head>
 <body>
-    <script src="/assets/index-oqiweori.js"></script>
+    <div class="noise"></div>
+
+    <div class="header">
+        <img src="orbs.png" class="header-orb" alt="orb">
+        <div class="header-text">
+            <h1>Profile<span>Quest</span></h1>
+            <p>Obter token do Discord</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="action-row">
+            <a class="btn-action" id="bm-link" href="#" draggable="true">
+                <span class="btn-action-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8M12 17v4"/>
+                        <path d="M12 7v6M9 10l3-3 3 3"/>
+                    </svg>
+                </span>
+                <span class="btn-action-label">Arrastar e soltar
+                    <span class="btn-sub">PC</span>
+                </span>
+            </a>
+            <button class="btn-action" id="btn-copy">
+                <span class="btn-action-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="9" y="9" width="13" height="13" rx="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </span>
+                <span class="btn-action-label">Copiar
+                    <span class="btn-sub">Celular</span>
+                </span>
+            </button>
+        </div>
+
+        <div class="warning-box">
+            Nunca compartilhe o teu token. Dá acesso total à tua conta Discord.
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        var BM = "javascript:(function(){var uid='pq'+Date.now();function rm(){var e=document.getElementById(uid);if(e)e.remove();}var token=null;try{var f=document.createElement('iframe');f.style.display='none';document.body.appendChild(f);try{token=JSON.parse(f.contentWindow.localStorage.token||'null');}catch(x){}f.remove();}catch(x){}if(!token){try{var req;window.webpackChunkdiscord_app.push([[Symbol()],{},function(r){req=r;}]);Object.values(req.c).forEach(function(m){if(token||!m||!m.exports)return;[m.exports,m.exports.default,m.exports.Z,m.exports.ZP].forEach(function(x){if(token||!x||typeof x.getToken!=='function')return;try{var t=x.getToken();if(t&&t.length>20)token=t;}catch(x){}});});}catch(x){}}var wrap=document.createElement('div');wrap.id=uid;wrap.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;';if(!token){wrap.innerHTML='<div style=\"background:#1e1f22;border:1px solid #ed4245;border-radius:12px;padding:28px 32px;max-width:380px;width:90%;text-align:center;\"><p style=\"color:#ed4245;font-weight:700;font-size:15px;margin-bottom:8px;\">Token n\u00e3o encontrado</p><p style=\"color:#949ba4;font-size:13px;margin-bottom:20px;\">Certifica-te de estar em <b>discord.com/app</b> e logado.</p><button id=\"'+uid+'c\" style=\"background:#2b2d31;border:1px solid #3f4147;color:#dbdee1;padding:9px 24px;border-radius:6px;cursor:pointer;font-size:14px;font-weight:600;\">Fechar</button></div>';document.body.appendChild(wrap);document.getElementById(uid+'c').addEventListener('click',rm);wrap.addEventListener('click',function(e){if(e.target===wrap)rm();});return;}wrap.innerHTML='<div style=\"background:#1e1f22;border:1px solid #3f4147;border-radius:12px;padding:28px 32px;max-width:460px;width:90%;\"><p style=\"color:#23a55a;font-weight:700;font-size:14px;margin-bottom:12px;\">\u2713 Token encontrado</p><div style=\"background:#111214;border:1px solid #2b2d31;border-radius:6px;padding:10px 12px;font-size:11px;word-break:break-all;color:#b5bac1;font-family:monospace;line-height:1.6;margin-bottom:16px;max-height:80px;overflow-y:auto;\">'+token+'</div><div style=\"display:flex;gap:8px;\"><button id=\"'+uid+'p\" style=\"flex:1;background:#5865f2;border:none;color:#fff;padding:10px;border-radius:6px;cursor:pointer;font-weight:700;font-size:14px;\">Copiar Token</button><button id=\"'+uid+'c\" style=\"background:#2b2d31;border:1px solid #3f4147;color:#dbdee1;padding:10px 16px;border-radius:6px;cursor:pointer;font-size:18px;line-height:1;\">\u00d7</button></div></div>';document.body.appendChild(wrap);document.getElementById(uid+'c').addEventListener('click',rm);wrap.addEventListener('click',function(e){if(e.target===wrap)rm();});document.getElementById(uid+'p').addEventListener('click',function(){navigator.clipboard.writeText(token).then(function(){var b=document.getElementById(uid+'p');if(b){b.textContent='\u2713 Copiado!';b.style.background='#23a55a';}}).catch(function(){prompt('Copia o token:',token);});});})()";
+
+        var bmLink = document.getElementById('bm-link');
+        bmLink.href = BM;
+        bmLink.addEventListener('click', function(e){ e.preventDefault(); });
+        bmLink.addEventListener('dragstart', function(e){
+            e.dataTransfer.setData('text/uri-list', BM);
+            e.dataTransfer.setData('text/plain', BM);
+            e.dataTransfer.effectAllowed = 'copy';
+            var ghost = document.createElement('div');
+            ghost.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;';
+            document.body.appendChild(ghost);
+            e.dataTransfer.setDragImage(ghost, 0, 0);
+            setTimeout(function(){ document.body.removeChild(ghost); }, 0);
+        });
+
+        function showToast(msg) {
+            var t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(function(){ t.classList.remove('show'); }, 2500);
+        }
+
+        document.getElementById('btn-copy').addEventListener('click', function() {
+            var self = this;
+            navigator.clipboard.writeText(BM).then(function() {
+                self.querySelector('.btn-action-icon').innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+                self.querySelector('.btn-action-label').innerHTML = 'Copiado! <span class="btn-sub">Celular</span>';
+                self.classList.add('copied');
+                showToast('Bookmarklet copiado!');
+                setTimeout(function() {
+                    self.querySelector('.btn-action-icon').innerHTML = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+                    self.querySelector('.btn-action-label').innerHTML = 'Copiar <span class="btn-sub">Celular</span>';
+                    self.classList.remove('copied');
+                }, 2000);
+            }).catch(function() { showToast('Erro ao copiar.'); });
+        });
+    </script>
 </body>
 </html>
