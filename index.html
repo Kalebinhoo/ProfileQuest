@@ -3,51 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProfileQuest // GET TOKEN</title>
-    <meta name="description" content="Profilequest // GET TOKEN um sistema para acessar seu token e logar no nosso bot para concluir: Missões, conseguir orbs de um jeito rápido e pratico.">
+    <title>ProfileQuest</title>
+    <meta name="description" content="ProfileQuest — sistema completo para automatizar Discord Quests. Obtenha tokens e complete missões automaticamente.">
     <meta name="theme-color" content="#3f3f46">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="ProfileQuest // GET TOKEN">
-    <meta property="og:description" content="Profilequest // GET TOKEN um sistema para acessar seu token e logar no nosso bot para concluir: Missões, conseguir orbs de um jeito rápido e pratico.">
+    <meta property="og:title" content="ProfileQuest">
+    <meta property="og:description" content="Sistema completo para automatizar Discord Quests. Obtenha tokens e complete missões automaticamente.">
     <meta property="og:image" content="/profilequest_banner.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="ProfileQuest">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ProfileQuest // GET TOKEN">
-    <meta name="twitter:description" content="Profilequest // GET TOKEN um sistema para acessar seu token e logar no nosso bot para concluir: Missões, conseguir orbs de um jeito rápido e pratico.">
+    <meta name="twitter:title" content="ProfileQuest">
+    <meta name="twitter:description" content="Sistema completo para automatizar Discord Quests.">
     <meta name="twitter:image" content="/profilequest_banner.png">
     <link rel="icon" href="orbs.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/index-lkajdfjlkj.css">
-    <script src="assets/index-oqiweori.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #e4e4e7;
+            padding: 24px;
+            gap: 36px;
+            background: #09090b;
+            position: relative;
+            overflow: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(63,63,70,0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.025;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+        }
+        .header-orb {
+            width: 80px; height: 80px;
+            object-fit: contain;
+            animation: levitate 4s ease-in-out infinite;
+            filter: grayscale(0.3) drop-shadow(0 0 24px rgba(161,161,170,0.25));
+            flex-shrink: 0;
+        }
+        @keyframes levitate {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .header-text { text-align: left; }
+        .header h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: #fafafa;
+            letter-spacing: -1.2px;
+            line-height: 1;
+        }
+        .header h1 span {
+            color: #71717a;
+            font-weight: 500;
+        }
+        .header p {
+            color: #52525b;
+            font-size: 0.85rem;
+            margin-top: 7px;
+            letter-spacing: 0.3px;
+        }
+
+        .options {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            width: 100%;
+            max-width: 560px;
+        }
+
+        .option-card {
+            background: linear-gradient(180deg, #18181b 0%, #111113 100%);
+            border: 1px solid #27272a;
+            border-radius: 16px;
+            padding: 26px 22px;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 1px 0 0 rgba(255,255,255,0.03) inset;
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at top, rgba(255,255,255,0.04) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.25s;
+            pointer-events: none;
+        }
+
+        .option-card:hover::before { opacity: 1; }
+
+        .option-card:hover {
+            border-color: #3f3f46;
+            transform: translateY(-3px);
+            box-shadow:
+                0 1px 0 0 rgba(255,255,255,0.05) inset,
+                0 12px 32px rgba(0,0,0,0.5);
+        }
+
+        .option-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: #27272a;
+            border: 1px solid #3f3f46;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s;
+        }
+
+        .option-card:hover .option-icon {
+            background: #3f3f46;
+            border-color: #52525b;
+        }
+
+        .option-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: #a1a1aa;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.25s;
+        }
+
+        .option-card:hover .option-icon svg { stroke: #fafafa; }
+
+        .option-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fafafa;
+            letter-spacing: -0.3px;
+        }
+
+        .option-desc {
+            font-size: 0.8rem;
+            color: #71717a;
+            line-height: 1.5;
+        }
+
+        .option-arrow {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #52525b;
+            margin-top: 4px;
+            transition: color 0.25s, gap 0.25s;
+        }
+
+        .option-card:hover .option-arrow {
+            color: #a1a1aa;
+            gap: 10px;
+        }
+
+        .footer-text {
+            position: relative;
+            z-index: 1;
+            font-size: 0.72rem;
+            color: #3f3f46;
+            text-align: center;
+            letter-spacing: 0.2px;
+        }
+
+        @media (max-width: 600px) {
+            .options { grid-template-columns: 1fr; }
+            .header { flex-direction: column; text-align: center; }
+            .header-text { text-align: center; }
+            .header h1 { font-size: 2rem; }
+        }
+    </style>
 </head>
 <body>
     <div class="noise"></div>
+
     <div class="header">
         <img src="orbs.png" class="header-orb" alt="orb">
         <div class="header-text">
             <h1>Profile<span>Quest</span></h1>
-            <p>Obter token do Discord</p>
+            <p>Selecione uma opção</p>
         </div>
     </div>
-    <div class="card">
-        <div class="action-row">
-            <a class="btn-action" id="bm-link" href="#" draggable="true">
-                <span class="btn-action-icon">
-                    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M12 7v6M9 10l3-3 3 3"/></svg>
-                </span>
-                <span class="btn-action-label">Arrastar e soltar<span class="btn-sub">PC</span></span>
-            </a>
-            <button class="btn-action" id="btn-copy">
-                <span class="btn-action-icon">
-                    <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                </span>
-                <span class="btn-action-label">Copiar<span class="btn-sub">Celular</span></span>
-            </button>
-        </div>
-        <div class="warning-box">Nunca compartilhe o teu token. Dá acesso total à tua conta Discord.</div>
+
+    <div class="options">
+        <a href="get-token.html" class="option-card">
+            <div class="option-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                </svg>
+            </div>
+            <div>
+                <div class="option-title">Get Token</div>
+                <div class="option-desc">Obtenha o token da sua conta Discord usando o bookmarklet.</div>
+            </div>
+            <div class="option-arrow">Acessar →</div>
+        </a>
+
+        <a href="autoquest.html" class="option-card">
+            <div class="option-icon">
+                <svg viewBox="0 0 24 24">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+            </div>
+            <div>
+                <div class="option-title">AutoQuest</div>
+                <div class="option-desc">Faça login com seu token e complete missões automaticamente.</div>
+            </div>
+            <div class="option-arrow">Entrar →</div>
+        </a>
     </div>
-    <div class="toast" id="toast"></div>
+
+    <p class="footer-text">Sistema automático de Discord Quests</p>
 </body>
 </html>

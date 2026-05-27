@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ProfileQuest // AUTOQUEST</title>
+<meta name="description" content="ProfileQuest // AUTOQUEST — Painel de login e gestão de quests automáticas no Discord.">
+<meta name="theme-color" content="#3f3f46">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ProfileQuest // AUTOQUEST">
+<meta property="og:description" content="Painel de login e gestão de quests automáticas no Discord.">
+<meta property="og:image" content="/profilequest_banner.png">
+<meta property="og:site_name" content="ProfileQuest">
+<link rel="icon" href="orbs.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    color: #e4e4e7;
+    background: #09090b;
+    position: relative;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(63,63,70,0.15) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+}
+
+.noise {
+    position: fixed; inset: 0; z-index: 0;
+    opacity: 0.025; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ═══ LOGIN ═══ */
+.login-page {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    animation: fadeIn .5s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.login-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
+    border-right: 1px solid #1f1f23;
+}
+
+.login-left .logo-mark {
+    width: 56px; height: 56px;
+    margin-bottom: 32px;
+    animation: levitate 4s ease-in-out infinite;
+    filter: grayscale(0.3) drop-shadow(0 0 18px rgba(161,161,170,0.2));
+}
+.login-left .logo-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+@keyframes levitate {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.login-left h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #fafafa;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 14px;
+}
+.login-left h1 span { color: #71717a; font-weight: 500; }
+
+.login-left .desc {
+    font-size: 0.9rem;
+    color: #52525b;
+    line-height: 1.65;
+    max-width: 380px;
+    letter-spacing: 0.2px;
+}
+
+.login-left .features {
+    margin-top: 42px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.login-left .feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.82rem;
+    color: #71717a;
+}
+
+.login-left .feature .dot {
+    width: 5px; height: 5px;
+    background: #3f3f46;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.login-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 360px;
+    background: linear-gradient(180deg, #18181b 0%, #111113 100%);
+    border: 1px solid #27272a;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow:
+        0 1px 0 0 rgba(255,255,255,0.03) inset,
+        0 20px 50px -12px rgba(0,0,0,0.8);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 22px;
+    font-size: 0.75rem;
+    color: #52525b;
+    text-decoration: none;
+    transition: color .2s;
+}
+.back-link:hover { color: #a1a1aa; }
+
+.login-form h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fafafa;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+}
+
+.login-form .sub {
+    font-size: 0.8rem;
+    color: #52525b;
+    margin-bottom: 26px;
+    line-height: 1.5;
+}
+
+.field { margin-bottom: 18px; }
+.field label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #71717a;
+    margin-bottom: 8px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+.field input {
+    width: 100%;
+    background: #09090b;
+    border: 1px solid #27272a;
+    border-radius: 10px;
+    padding: 11px 14px;
+    color: #fafafa;
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s, background .2s;
+}
+.field input::placeholder { color: #3f3f46; }
+.field input:focus {
+    border-color: #3f3f46;
+    background: #0a0a0d;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #27272a;
+    background: #18181b;
+    color: #fafafa;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+    letter-spacing: 0.2px;
+    transition: all .2s ease;
+}
+.btn-primary:hover:not(:disabled) {
+    background: #27272a;
+    border-color: #3f3f46;
+}
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+.login-form .footer-note {
+    margin-top: 22px;
+    font-size: 0.7rem;
+    color: #3f3f46;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* ═══ DASHBOARD ═══ */
+.dashboard {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: none;
+    animation: fadeIn .4s ease;
+}
+.dashboard.active { display: block; }
+
+.dash-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 22px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #1f1f23;
+}
+
+.dash-header .avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid #27272a;
+}
+
+.dash-header .info { flex: 1; }
+.dash-header .info .name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #fafafa;
+}
+.dash-header .info .tag {
+    font-size: 0.75rem;
+    color: #52525b;
+    margin-top: 2px;
+}
+
+.btn-logout {
+    padding: 8px 16px;
+    background: transparent;
+    color: #71717a;
+    border: 1px solid #27272a;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: inherit;
+    transition: all .2s;
+}
+.btn-logout:hover {
+    color: #f87171;
+    border-color: #7f1d1d;
+}
+
+.section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #52525b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+}
+
+.quest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+}
+
+.quest-card {
+    background: linear-gradient(180deg, #18181b 0%, #111113 100%);
+    border: 1px solid #27272a;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color .2s, transform .2s;
+}
+.quest-card:hover {
+    border-color: #3f3f46;
+    transform: translateY(-1px);
+}
+
+.quest-card .banner {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    background: #09090b;
+    display: block;
+    border-bottom: 1px solid #1f1f23;
+}
+
+.quest-card .body { padding: 16px; }
+
+.quest-card .title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #fafafa;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quest-card .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 12px;
+}
+.quest-card .meta-row {
+    font-size: 0.75rem;
+    color: #52525b;
+}
+.quest-card .meta-row .val { color: #a1a1aa; font-weight: 500; }
+
+.progress-wrap {
+    padding: 11px 12px;
+    background: #09090b;
+    border-radius: 8px;
+    border: 1px solid #1f1f23;
+    margin-bottom: 12px;
+}
+.progress-bar-bg {
+    height: 3px;
+    background: #27272a;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 7px;
+}
+.progress-bar-fill {
+    height: 100%;
+    background: #a1a1aa;
+    border-radius: 99px;
+    transition: width .5s ease;
+}
+.progress-bar-fill.done { background: #4ade80; }
+.progress-label {
+    font-size: 0.68rem;
+    color: #52525b;
+    text-align: center;
+    font-weight: 600;
+}
+
+.btn-quest {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #27272a;
+    background: #18181b;
+    color: #e4e4e7;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: inherit;
+    transition: all .2s;
+}
+.btn-quest.start:hover { background: #27272a; border-color: #3f3f46; }
+.btn-quest.running {
+    background: rgba(74,222,128,0.06);
+    border-color: #166534;
+    color: #4ade80;
+}
+.btn-quest.running:hover {
+    background: rgba(74,222,128,0.1);
+}
+.btn-quest.completed {
+    background: transparent;
+    color: #4ade80;
+    border-color: #166534;
+    cursor: default;
+}
+.btn-quest:disabled { opacity: .5; cursor: not-allowed; }
+
+.badge {
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.badge.done {
+    background: rgba(74,222,128,.08);
+    color: #4ade80;
+    border: 1px solid #166534;
+}
+
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 11px 18px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all .25s ease;
+    pointer-events: none;
+    z-index: 999;
+    background: #18181b;
+    border: 1px solid #27272a;
+    color: #e4e4e7;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+.toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #52525b;
+}
+.spinner {
+    width: 22px; height: 22px;
+    border: 2px solid #27272a;
+    border-top-color: #a1a1aa;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading p { font-size: 0.82rem; }
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    border: 1px solid #1f1f23;
+    border-radius: 12px;
+    background: #09090b;
+}
+.empty-state .icon {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    opacity: .35;
+}
+.empty-state h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fafafa;
+    margin-bottom: 4px;
+}
+.empty-state p {
+    font-size: 0.8rem;
+    color: #52525b;
+}
+
+@media (max-width: 900px) {
+    .login-page { grid-template-columns: 1fr; }
+    .login-left { display: none; }
+    .login-right { min-height: 100vh; padding: 40px 24px; }
+    .quest-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+
+<div class="login-page" id="login-screen">
+    <div class="login-left">
+        <div class="logo-mark"><img src="orbs.png" alt="orb"></div>
+        <h1>Complete quests.<br><span>Ganhe recompensas.</span></h1>
+        <p class="desc">AutoQuest automatiza suas Discord Quests. Conecte sua conta e deixe o sistema trabalhar por você.</p>
+        <div class="features">
+            <div class="feature"><div class="dot"></div>Completion automática de quests</div>
+            <div class="feature"><div class="dot"></div>Notificações em tempo real</div>
+            <div class="feature"><div class="dot"></div>Suporte a múltiplas contas</div>
+            <div class="feature"><div class="dot"></div>Rotação automática de tokens</div>
+        </div>
+    </div>
+
+    <div class="login-right">
+        <div class="login-form">
+            <a href="index.html" class="back-link">← Voltar</a>
+            <h2>Entrar</h2>
+            <p class="sub">Cole seu token do Discord para acessar o painel.</p>
+            <div class="field">
+                <label>Token</label>
+                <input type="password" id="token-input" placeholder="Seu token aqui" autocomplete="off" />
+            </div>
+            <button class="btn-primary" onclick="login()" id="login-btn">Continuar</button>
+            <p class="footer-note">Seu token é armazenado localmente e usado apenas para acessar a API do Discord.</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard" id="dashboard">
+    <div class="dash-header">
+        <img class="avatar" id="user-avatar" src="" alt="" />
+        <div class="info">
+            <div class="name" id="user-name">—</div>
+            <div class="tag" id="user-tag">—</div>
+        </div>
+        <button class="btn-logout" onclick="logout()">Sair</button>
+    </div>
+    <div class="section-label">Quests</div>
+    <div id="quest-container">
+        <div class="loading"><div class="spinner"></div><p>Carregando...</p></div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let currentToken = null, currentUserId = null;
+let activeQuests = {}; // questId -> { interval, timeout, target, progress, taskName }
+
+const DISCORD_PROPS = {os:'Windows',browser:'Discord Client',release_channel:'stable',client_version:'1.0.9236',os_version:'10.0.19045',os_arch:'x64',app_arch:'x64',system_locale:'en-US',has_client_mods:false,browser_user_agent:'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9236 Chrome/124.0.6367.243 Electron/30.4.0 Safari/537.36',browser_version:'30.4.0',client_build_number:539951,native_build_number:81687,client_event_source:null};
+
+function discordHeaders() {
+    return {
+        'Authorization': currentToken,
+        'Content-Type': 'application/json',
+        'X-Super-Properties': btoa(JSON.stringify(DISCORD_PROPS)),
+        'X-Discord-Locale': 'en-US',
+        'X-Discord-Timezone': 'America/Sao_Paulo'
+    };
+}
+
+function showToast(msg, type='success') {
+    const t = document.getElementById('toast');
+    const p = {success:'✓',error:'✕',info:'•'};
+    t.textContent = `${p[type]||'•'} ${msg}`;
+    t.classList.add('show');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function fmtExpiry(iso) {
+    if (!iso) return null;
+    const diff = new Date(iso) - Date.now();
+    if (diff < 0) return 'Expirada';
+    const h = Math.floor(diff/3600000), d = Math.floor(h/24);
+    return d > 0 ? `${d}d ${h%24}h` : `${h}h`;
+}
+
+async function login() {
+    const token = document.getElementById('token-input').value.trim();
+    if (!token) { showToast('Token vazio','error'); return; }
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true; btn.textContent = 'Conectando...';
+    try {
+        const res = await fetch('https://discord.com/api/v10/users/@me', { headers:{Authorization:token} });
+        if (!res.ok) throw 0;
+        const user = await res.json();
+        currentToken = token; currentUserId = user.id;
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('dashboard').classList.add('active');
+        document.getElementById('user-avatar').src = user.avatar
+            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+        document.getElementById('user-name').textContent = user.global_name || user.username;
+        document.getElementById('user-tag').textContent = `@${user.username}`;
+        loadQuests();
+    } catch {
+        showToast('Token inválido','error');
+        btn.disabled=false; btn.textContent='Continuar';
+    }
+}
+
+function logout() {
+    Object.keys(activeQuests).forEach(stopQuest);
+    currentToken=null; currentUserId=null;
+    document.getElementById('token-input').value='';
+    document.getElementById('login-screen').style.display='';
+    document.getElementById('dashboard').classList.remove('active');
+}
+
+async function loadQuests() {
+    const c = document.getElementById('quest-container');
+    c.innerHTML = '<div class="loading"><div class="spinner"></div><p>Carregando...</p></div>';
+    try {
+        const res = await fetch('/api/quests', { headers: { Authorization: currentToken } });
+        if (!res.ok) throw new Error('Falha ao carregar quests');
+        const data = await res.json();
+        const list = Array.isArray(data) ? data : (data.quests ?? []);
+        const now = new Date();
+        const quests = list.filter(q => q.config && !(q.config.expires_at && new Date(q.config.expires_at) < now));
+        if (!quests.length) {
+            c.innerHTML='<div class="empty-state"><div class="icon">—</div><h3>Sem quests</h3><p>Nenhuma quest disponível</p></div>';
+            return;
+        }
+        c.innerHTML='<div class="quest-grid" id="quest-grid"></div>';
+        const grid = document.getElementById('quest-grid');
+        quests.forEach(q => grid.appendChild(buildQuestCard(q)));
+    } catch(e) {
+        c.innerHTML=`<div class="empty-state"><div class="icon">⚠</div><h3>Erro</h3><p>${e.message}</p></div>`;
+    }
+}
+
+function buildQuestCard(q) {
+    const cfg = q.config, msg = cfg.messages || {}, rewards = cfg.rewards_config?.rewards || [], reward = rewards[0], assets = cfg.assets || {};
+    let banner = null;
+    const hero = assets.hero || assets.quest_bar_hero;
+    if (hero) banner = hero.startsWith('quests/') ? `https://cdn.discordapp.com/${hero}` : `https://cdn.discordapp.com/quests/${q.id}/${hero}`;
+
+    const tc = cfg.task_config_v2 || cfg.task_config || {}, tasks = tc.tasks || {};
+    const supported = ['WATCH_VIDEO','WATCH_VIDEO_ON_MOBILE','PLAY_ON_DESKTOP','STREAM_ON_DESKTOP','PLAY_ACTIVITY','PLAY_ON_XBOX','PLAY_ON_PLAYSTATION'];
+    const taskName = supported.find(t => tasks[t]) || Object.keys(tasks)[0] || 'N/A';
+    const target = tasks[taskName]?.target || 1;
+    const progress = q.user_status?.progress?.[taskName]?.value || 0;
+    const done = Boolean(q.user_status?.completed_at);
+    const enrolled = Boolean(q.user_status?.enrolled_at);
+    const pct = Math.min(100, Math.round((progress/target)*100));
+    const exp = fmtExpiry(cfg.expires_at);
+    const labels = {WATCH_VIDEO:'Assistir vídeo',WATCH_VIDEO_ON_MOBILE:'Vídeo mobile',PLAY_ON_DESKTOP:'Jogar PC',PLAY_ON_XBOX:'Jogar Xbox',PLAY_ON_PLAYSTATION:'Jogar PS',STREAM_ON_DESKTOP:'Stream',PLAY_ACTIVITY:'Atividade'};
+
+    const isRunning = !!activeQuests[q.id];
+    const card = document.createElement('div');
+    card.className = 'quest-card';
+    card.id = `quest-${q.id}`;
+    card.dataset.target = target;
+    card.dataset.taskName = taskName;
+    card.dataset.questName = msg.quest_name || 'Quest';
+    card.dataset.enrolled = enrolled;
+    card.innerHTML = `
+        ${banner ? `<img class="banner" src="${banner}" alt="" onerror="this.style.display='none'"/>` : '<div class="banner"></div>'}
+        <div class="body">
+            <div class="title">${msg.quest_name || 'Quest'} ${done ? '<span class="badge done">✓</span>' : ''}</div>
+            <div class="meta">
+                <div class="meta-row"><span class="val">${reward?.messages?.name || '—'}</span></div>
+                <div class="meta-row"><span class="val">${labels[taskName] || taskName}${exp ? ' · ' + exp : ''}</span></div>
+            </div>
+            <div class="progress-wrap">
+                <div class="progress-bar-bg"><div class="progress-bar-fill ${done ? 'done' : ''}" style="width:${pct}%"></div></div>
+                <div class="progress-label"><span class="prog-current">${progress}</span>/<span class="prog-target">${target}</span></div>
+            </div>
+            <button class="btn-quest ${done ? 'completed' : (isRunning ? 'running' : 'start')}"
+                    onclick="toggleQuest('${q.id}')"
+                    ${done ? 'disabled' : ''}>
+                ${done ? '✓ Concluída' : (isRunning ? '⏸ Parar' : 'Completar')}
+            </button>
+        </div>`;
+    return card;
+}
+
+function updateQuestUI(questId, current, target) {
+    const card = document.getElementById(`quest-${questId}`);
+    if (!card) return;
+    const pct = Math.min(100, Math.round((current/target)*100));
+    const fill = card.querySelector('.progress-bar-fill');
+    const cur = card.querySelector('.prog-current');
+    if (fill) fill.style.width = pct + '%';
+    if (cur) cur.textContent = current;
+    if (current >= target) {
+        fill?.classList.add('done');
+        const btn = card.querySelector('.btn-quest');
+        if (btn) {
+            btn.className = 'btn-quest completed';
+            btn.textContent = '✓ Concluída';
+            btn.disabled = true;
+        }
+        const title = card.querySelector('.title');
+        if (title && !title.querySelector('.badge')) {
+            title.insertAdjacentHTML('beforeend', ' <span class="badge done">✓</span>');
+        }
+    }
+}
+
+async function toggleQuest(questId) {
+    if (activeQuests[questId]) {
+        stopQuest(questId);
+    } else {
+        startQuest(questId);
+    }
+}
+
+function stopQuest(questId) {
+    const a = activeQuests[questId];
+    if (!a) return;
+    if (a.interval) clearInterval(a.interval);
+    delete activeQuests[questId];
+    const card = document.getElementById(`quest-${questId}`);
+    if (card) {
+        const btn = card.querySelector('.btn-quest');
+        if (btn && !btn.classList.contains('completed')) {
+            btn.className = 'btn-quest start';
+            btn.textContent = 'Completar';
+        }
+    }
+    showToast('Heartbeat parado', 'info');
+}
+
+async function startQuest(questId) {
+    const card = document.getElementById(`quest-${questId}`);
+    if (!card) return;
+    const target = parseInt(card.dataset.target);
+    const taskName = card.dataset.taskName;
+    const questName = card.dataset.questName;
+    const enrolled = card.dataset.enrolled === 'true';
+    const currentText = card.querySelector('.prog-current')?.textContent || '0';
+    let progress = parseInt(currentText) || 0;
+
+    const btn = card.querySelector('.btn-quest');
+    btn.className = 'btn-quest running';
+    btn.textContent = '⏸ Parar';
+
+    showToast(`Iniciando ${questName}...`, 'info');
+
+    if (!enrolled) {
+        try {
+            const res = await fetch('/api/enroll', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ questId, token: currentToken, body: { location: 1 } })
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                showToast(`Enroll falhou (${res.status}): ${err.message || 'erro'}`, 'error');
+                stopQuest(questId);
+                return;
+            }
+            const enrollData = await res.json();
+            card.dataset.enrolled = 'true';
+            if (enrollData.stream_key) card.dataset.streamKey = enrollData.stream_key;
+        } catch (e) {
+            showToast('Erro no enroll: ' + e.message, 'error');
+            stopQuest(questId);
+            return;
+        }
+    }
+
+    activeQuests[questId] = {
+        target,
+        progress,
+        taskName,
+        questName,
+        interval: null
+    };
+
+    sendHeartbeat(questId);
+    activeQuests[questId].interval = setInterval(() => sendHeartbeat(questId), 30000);
+}
+
+async function sendHeartbeat(questId) {
+    const a = activeQuests[questId];
+    if (!a) return;
+    const card = document.getElementById(`quest-${questId}`);
+    const streamKey = card?.dataset.streamKey || `call:${questId}:1`;
+
+    const isVideo = a.taskName === 'WATCH_VIDEO' || a.taskName === 'WATCH_VIDEO_ON_MOBILE';
+    let body;
+
+    if (isVideo) {
+        const next = Math.min(a.progress + 30, a.target);
+        body = {
+            stream_key: streamKey,
+            terminal: next >= a.target,
+            progress: { [a.taskName]: { value: next } }
+        };
+    } else {
+        body = { stream_key: streamKey, terminal: false };
+    }
+
+    try {
+        const res = await fetch('/api/heartbeat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ questId, token: currentToken, body })
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            showToast(`HB ${res.status}: ${err.message || 'erro'}`, 'error');
+            if (res.status === 401 || res.status === 404 || res.status === 400) {
+                stopQuest(questId);
+            }
+            return;
+        }
+
+        const data = await res.json();
+        const prog = data.progress?.[a.taskName]?.value;
+        if (typeof prog === 'number') {
+            a.progress = prog;
+            updateQuestUI(questId, prog, a.target);
+            if (prog >= a.target || data.completed_at) {
+                showToast(`✓ ${a.questName} concluída!`, 'success');
+                stopQuest(questId);
+                setTimeout(loadQuests, 1500);
+            }
+        } else if (isVideo) {
+            const next = Math.min(a.progress + 30, a.target);
+            a.progress = next;
+            updateQuestUI(questId, next, a.target);
+            if (next >= a.target) {
+                showToast(`✓ ${a.questName} concluída!`, 'success');
+                stopQuest(questId);
+                setTimeout(loadQuests, 1500);
+            }
+        }
+    } catch (e) {
+        showToast('Heartbeat falhou: ' + e.message, 'error');
+    }
+}
+
+document.getElementById('token-input')?.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+</script>
+</body>
+</html>
