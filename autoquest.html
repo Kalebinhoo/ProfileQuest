@@ -710,6 +710,14 @@ async function startQuest(questId) {
     const target = parseInt(card.dataset.target);
     const taskName = card.dataset.taskName;
     const questName = card.dataset.questName;
+
+    const isVideo = taskName === 'WATCH_VIDEO' || taskName === 'WATCH_VIDEO_ON_MOBILE';
+
+    if (!isVideo) {
+        showCompletionScript(questId, questName, taskName, target);
+        return;
+    }
+
     const enrolled = card.dataset.enrolled === 'true';
     const currentText = card.querySelector('.prog-current')?.textContent || '0';
     let progress = parseInt(currentText) || 0;
@@ -753,6 +761,59 @@ async function startQuest(questId) {
 
     sendHeartbeat(questId);
     activeQuests[questId].interval = setInterval(() => sendHeartbeat(questId), 30000);
+}
+
+function showCompletionScript(questId, questName, taskName, target) {
+    const isPlay = taskName === 'PLAY_ON_DESKTOP' || taskName === 'PLAY_ON_DESKTOP_V2';
+    const isStream = taskName === 'STREAM_ON_DESKTOP';
+
+    const script = `let wpRequire;window.webpackChunkdiscord_app.push([[Symbol()],{},r=>{wpRequire=r}]);let api=Object.values(wpRequire.c).find(x=>x?.exports?.tn?.get).exports.tn;let QuestStore=Object.values(wpRequire.c).find(x=>x?.exports?.Z?.getQuest).exports.Z;let quest=QuestStore.getQuest("${questId}");if(!quest)return console.error("Quest não encontrada");${isPlay ? `
+let RunningGameStore=Object.values(wpRequire.c).find(x=>x?.exports?.ZP?.getRunningGames).exports.ZP;
+let games=RunningGameStore.getRunningGames();
+let appData=quest.config.application;
+let fakeGame={cmdLine:"C:\\\\Program Files\\\\"+appData.name+"\\\\"+appData.name+".exe",exeName:appData.name+".exe",exePath:"C:\\\\Program Files\\\\"+appData.name+"\\\\"+appData.name+".exe",hidden:false,isLauncher:false,id:appData.id,name:appData.name,pid:Math.floor(Math.random()*30000)+1000,pidPath:[],processName:appData.name,start:Date.now()};
+games.push(fakeGame);
+let FluxDispatcher=Object.values(wpRequire.c).find(x=>x?.exports?.Z?.dispatch&&x?.exports?.Z?.subscribe).exports.Z;
+FluxDispatcher.dispatch({type:"RUNNING_GAMES_CHANGE",removed:[],added:[fakeGame],games});
+console.log("✓ Spoofando jogo:",appData.name);
+console.log("Aguarda 15-20 minutos. Não fechas a janela.");` : isStream ? `
+console.log("Stream Quest — entra numa voice channel e começa stream.");
+console.log("Mantém o stream aberto até o progresso chegar a ${target}s.");` : `
+let interval=setInterval(()=>{api.post({url:"/quests/${questId}/heartbeat",body:{stream_key:"call:${questId}:1",terminal:false}}).then(r=>{let prog=r?.body?.progress?.${taskName}?.value||0;console.log("Progresso:",prog,"/${target}");if(prog>=${target}){clearInterval(interval);console.log("✓ Concluída!");}});},30000);`}
+console.log("Quest: ${questName}");`;
+
+    const modal = document.createElement('div');
+    modal.id = 'script-modal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML = `
+        <div style="background:linear-gradient(180deg,#18181b 0%,#111113 100%);border:1px solid #27272a;border-radius:14px;padding:24px;max-width:560px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,0.8);">
+            <h3 style="color:#fafafa;font-size:1rem;font-weight:700;margin-bottom:6px;">${questName}</h3>
+            <p style="color:#71717a;font-size:0.78rem;margin-bottom:14px;line-height:1.5;">
+                Quests de jogo/stream precisam ser executadas no <b style="color:#a1a1aa;">Discord Desktop App</b>.
+                Abre o Discord, pressiona <code style="background:#27272a;padding:2px 6px;border-radius:4px;color:#a1a1aa;">Ctrl+Shift+I</code>, vai ao <b>Console</b> e cola este script:
+            </p>
+            <pre id="script-content" style="background:#09090b;border:1px solid #27272a;border-radius:8px;padding:12px;font-size:0.7rem;color:#a1a1aa;font-family:'Cascadia Code','Consolas',monospace;line-height:1.5;max-height:200px;overflow:auto;white-space:pre-wrap;word-break:break-all;margin-bottom:14px;">${script.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>
+            <div style="display:flex;gap:8px;">
+                <button id="copy-script" style="flex:1;padding:10px;background:#18181b;border:1px solid #3f3f46;border-radius:8px;color:#fafafa;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;">Copiar Script</button>
+                <button id="close-modal" style="padding:10px 18px;background:transparent;border:1px solid #27272a;border-radius:8px;color:#71717a;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;">Fechar</button>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+
+    document.getElementById('copy-script').addEventListener('click', () => {
+        navigator.clipboard.writeText(script).then(() => {
+            const b = document.getElementById('copy-script');
+            b.textContent = '✓ Copiado!';
+            b.style.background = 'rgba(74,222,128,0.08)';
+            b.style.borderColor = '#166534';
+            b.style.color = '#4ade80';
+        });
+    });
+    document.getElementById('close-modal').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+
+    const btn = document.getElementById(`quest-${questId}`)?.querySelector('.btn-quest');
+    if (btn) btn.textContent = 'Completar';
 }
 
 async function sendHeartbeat(questId) {
